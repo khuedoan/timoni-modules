@@ -101,7 +101,8 @@ import (
 	config: #Config
 
 	objects: {
-		deploy: #Deployment & {#config: config}
-		service: #Service & {#config: config}
+		for index, resource in pipeline {
+			"pipeline-\(index)": resource
+		}
 	}
 }
