@@ -1,0 +1,39 @@
+name: Release modules
+on:
+  push:
+    branches:
+      - master
+    # tags:
+    #   - TODO semver
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    # TODO automatically generate based on subdir
+    strategy:
+      matrix:
+        module:
+          - tekton-pipelines
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Timoni
+        uses: stefanprodan/timoni/actions/setup@main
+      # TODO generate build matrix
+      - name: Lint
+        run: |
+          timoni mod lint ./${{ matrix.module }}
+      - name: Test instance build
+        run: |
+          timoni build --namespace testing test ./${{ matrix.module }}
+      - name: Push
+        run: |
+          timoni mod push ./${{ matrix.module }} \
+            oci://ghcr.io/${{ github.repository }}/${{ matrix.module }} \
+            --creds ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} \
+            --version '0.0.1' \
+            --latest \
+            --annotation 'org.opencontainers.image.source=https://github.com/${{ github.repository }}' \
+            --annotation 'org.opencontainers.image.licenses=Apache-2.0'
+    permissions:
+      packages: write
