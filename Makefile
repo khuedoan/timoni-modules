@@ -1,5 +1,5 @@
 .POSIX:
-.POSIX: default vet test vendor
+.PHONY: default vet test vendor
 
 default: vet test
 
