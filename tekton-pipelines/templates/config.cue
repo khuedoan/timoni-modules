@@ -104,5 +104,8 @@ import (
 		for index, resource in pipeline {
 			"pipeline-\(index)": resource
 		}
+		for index, resource in triggers {
+			"triggers-\(index)": resource
+		}
 	}
 }

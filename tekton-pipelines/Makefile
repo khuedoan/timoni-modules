@@ -17,3 +17,14 @@ update:
 		--package templates \
 		pipeline.yaml
 	rm pipeline.yaml
+	curl https://storage.googleapis.com/tekton-releases/triggers/previous/v0.26.2/release.yaml \
+		| head -n -1 \
+		> triggers.yaml
+	cue import \
+		--force \
+		--outfile templates/triggers.cue \
+		--list \
+		--path '"triggers"' \
+		--package templates \
+		triggers.yaml
+	rm triggers.yaml
